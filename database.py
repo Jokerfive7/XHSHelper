@@ -41,7 +41,7 @@ class TaskManagerDB:
                 name TEXT NOT NULL,
                 description TEXT,
                 status TEXT NOT NULL DEFAULT '未开始'
-                    CHECK (status IN ('未开始', '进行中', '已完成', '已延期')),
+                    CHECK (status IN ('未开始', '进行中', '已完成', '待售后')),
                 due_date DATETIME NOT NULL,
                 expected_income DECIMAL(10,2) CHECK (expected_income >= 0),
                 actual_income DECIMAL(10,2) CHECK (actual_income >= 0),
