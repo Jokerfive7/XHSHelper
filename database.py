@@ -11,7 +11,7 @@ class TaskManagerDB:
             self.conn = sqlite3.connect(db_file)
             self.conn.execute("PRAGMA foreign_keys = ON")  # 启用外键约束
             print(f"成功连接到SQLite数据库: {db_file}")
-            self._create_tables()
+            #self._create_tables()
         except Error as e:
             print(f"连接数据库失败: {e}")
             raise
