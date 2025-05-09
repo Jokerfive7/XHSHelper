@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Error
-from datetime import datetime
+from datetime import date
 from typing import List, Tuple, Optional
 
 class TaskManagerDB:
@@ -11,7 +11,7 @@ class TaskManagerDB:
             self.conn = sqlite3.connect(db_file)
             self.conn.execute("PRAGMA foreign_keys = ON")  # 启用外键约束
             print(f"成功连接到SQLite数据库: {db_file}")
-            #self._create_tables()
+            self._create_tables()
         except Error as e:
             print(f"连接数据库失败: {e}")
             raise
@@ -41,8 +41,8 @@ class TaskManagerDB:
                 name TEXT NOT NULL,
                 description TEXT,
                 status TEXT NOT NULL DEFAULT '未开始'
-                    CHECK (status IN ('未开始', '进行中', '已完成', '待售后')),
-                due_date DATETIME NOT NULL,
+                    CHECK (status IN ('未开始', '进行中', '已完成', '已中断')),
+                due_date DATE NOT NULL,
                 expected_income DECIMAL(10,2) CHECK (expected_income >= 0),
                 actual_income DECIMAL(10,2) CHECK (actual_income >= 0),
                 expense DECIMAL(10,2) CHECK (expense >= 0),
@@ -91,7 +91,7 @@ class TaskManagerDB:
     # ---------- 基础操作方法 ----------
     def create_task(self, 
                    name: str, 
-                   due_date: datetime,
+                   due_date: date,
                    description: str = None,
                    expected_income: float = None,
                    tags: List[str] = None) -> int:
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     # 创建测试任务
     task_id = db.create_task(
         name="DDG防晒",
-        due_date=datetime(2025, 5, 31, 18, 0),
+        due_date=date(2025, 5, 31),
         description="图文",
         expected_income=800.00,
         tags=["黑柴狗中狗"]
