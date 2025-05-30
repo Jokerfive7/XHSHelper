@@ -98,7 +98,7 @@ class TaskCalendar(QCalendarWidget):
         main_window.show_add_task()
         
         # 设置默认截止日期
-        main_window.due_date_edit.setDate(date)
+        #main_window.due_date_edit.setDate(date)
         
         # 自动聚焦任务名称输入框
-        main_window.task_name_input.setFocus()
+        #main_window.task_name_input.setFocus()

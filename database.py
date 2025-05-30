@@ -4,7 +4,7 @@ from datetime import date
 from typing import List, Tuple, Optional
 
 class TaskManagerDB:
-    def __init__(self, db_file: str = "task_manager.db"):
+    def __init__(self, db_file: str = "task_manager1.db"):
         self.conn = None
         try:
             # 创建数据库连接
@@ -41,7 +41,7 @@ class TaskManagerDB:
                 name TEXT NOT NULL,
                 description TEXT,
                 status TEXT NOT NULL DEFAULT '未开始'
-                    CHECK (status IN ('未开始', '进行中', '已完成', '已中断')),
+                    CHECK (status IN ('未开始', '进行中', '已完成', '已中断', '已归档')),
                 due_date DATE NOT NULL,
                 expected_income DECIMAL(10,2) CHECK (expected_income >= 0),
                 actual_income DECIMAL(10,2) CHECK (actual_income >= 0),
@@ -194,7 +194,7 @@ class TaskManagerDB:
             print("数据库连接已关闭")
 
 # 使用示例
-if __name__ == "__main__":
+""" if __name__ == "__main__":
     db = TaskManagerDB()
 
     # 创建测试任务
@@ -217,4 +217,4 @@ if __name__ == "__main__":
     print(f"实际收入: {finance['total_actual']}")
     print(f"总支出: {finance['total_expense']}")
 
-    db.close()
+    db.close() """

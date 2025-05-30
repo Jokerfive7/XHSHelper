@@ -6,11 +6,12 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from database import TaskManagerDB
 
 class StatsDashboard(QWidget):
     def __init__(self):
         super().__init__()
-        self.db_conn = sqlite3.connect('task_manager.db')  # 修改为你的数据库路径
+        self.db = TaskManagerDB()
         self.init_ui()
         self.load_tags()
         self.update_display()
@@ -55,7 +56,7 @@ class StatsDashboard(QWidget):
 
     def load_tags(self):
         """加载标签数据到下拉框"""
-        cursor = self.db_conn.cursor()
+        cursor = self.db.conn.cursor()
         cursor.execute("SELECT tag_id, tag_name FROM tags ORDER BY tag_name")
         self.tag_combo.clear()
         self.tag_combo.addItem("全部", None)
@@ -90,7 +91,7 @@ class StatsDashboard(QWidget):
             query += " AND task_id IN (SELECT task_id FROM task_tags WHERE tag_id = ?)"
             params.append(tag_id)
         
-        cursor = self.db_conn.cursor()
+        cursor = self.db.conn.cursor()
         cursor.execute(query, params)
         return cursor.fetchone()[0]
 
@@ -117,7 +118,7 @@ class StatsDashboard(QWidget):
         
         daily_query += " GROUP BY DATE(due_date)"
         
-        cursor = self.db_conn.execute(daily_query, params)
+        cursor = self.db.conn.execute(daily_query, params)
         daily_data = {datetime.strptime(d[0], "%Y-%m-%d").date(): d[1] for d in cursor}
         
         # 填充数据
@@ -137,7 +138,7 @@ class StatsDashboard(QWidget):
             total_query += " AND task_id IN (SELECT task_id FROM task_tags WHERE tag_id = ?)"
             total_params.append(tag_id)
         
-        cursor = self.db_conn.execute(total_query, total_params)
+        cursor = self.db.conn.execute(total_query, total_params)
         total_income, total_expense = cursor.fetchone()
         
         return {
@@ -202,8 +203,8 @@ class StatsDashboard(QWidget):
         self.charts_layout.addWidget(self.pie_canvas)
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = StatsDashboard()
-    window.show()
-    sys.exit(app.exec_())
+#if __name__ == '__main__':
+#    app = QApplication(sys.argv)
+#    window = StatsDashboard()
+#    window.show()
+#    sys.exit(app.exec_())
